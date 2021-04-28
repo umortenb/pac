@@ -3,6 +3,7 @@ import { dbServer } from "../lib/firebaseAdmin";
 
 export interface HomeProps {
   title: string;
+  imageURL: string;
 }
 
 const Home: React.FC<HomeProps> = (props) => {
@@ -11,10 +12,7 @@ const Home: React.FC<HomeProps> = (props) => {
       <h1 className="mx-auto text-3xl my-8 font-semibold text-pink-500">
         {props.title}
       </h1>
-      <img
-        src="https://firebasestorage.googleapis.com/v0/b/pach-59e77.appspot.com/o/pages%2Fhome%2Fbisasam.png?alt=media&token=4b3f79a4-d4a5-410e-b361-304bf1679c10"
-        width="100"
-      />
+      <img src={props.imageURL} width="100" />
     </div>
   );
 };
@@ -22,8 +20,16 @@ const Home: React.FC<HomeProps> = (props) => {
 export default Home;
 
 export async function getStaticProps(context: GetStaticPropsContext) {
-  const homeDoc = await dbServer.collection("pages").doc("home").get();
-  const homeData = homeDoc.data();
+  let homeData: HomeProps;
+
+  const homeDoc = await (context.preview
+    ? dbServer.collection("config").doc("draft")
+    : dbServer
+  )
+    .collection("pages")
+    .doc("home")
+    .get();
+  homeData = homeDoc.data();
 
   return {
     props: {
