@@ -1,5 +1,5 @@
 import { GetStaticPropsContext } from "next";
-import { dbServer } from "../lib/firebaseAdmin";
+import { adminDb } from "../lib/firebaseAdmin";
 
 export interface HomeProps {
   title: string;
@@ -23,8 +23,8 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   let homeData: HomeProps;
 
   const homeDoc = await (context.preview
-    ? dbServer.collection("config").doc("draft")
-    : dbServer
+    ? adminDb.collection("config").doc("draft")
+    : adminDb
   )
     .collection("pages")
     .doc("home")
